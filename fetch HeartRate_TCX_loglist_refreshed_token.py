@@ -3,9 +3,8 @@ import base64
 import time
 import json
 import csv
-import os  # Ensure the os module is imported
+import os
 from datetime import datetime, timedelta
-import xml.etree.ElementTree as ET
 
 # Replace with your client ID and client secret
 client_id = '23PDS3'
@@ -14,13 +13,6 @@ client_secret = '8be183a112c011a53c188db507728577'  # Replace with your actual c
 # Replace with the access token and refresh token you obtained
 access_token = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyM1BEUzMiLCJzdWIiOiJDNE5XUkIiLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJ3aHIgd3BybyB3bnV0IHdzbGUgd3NvYyB3YWN0IHdveHkgd3RlbSB3d2VpIHdzZXQgd2xvYyB3cmVzIiwiZXhwIjoxNzIwNTkzNzkyLCJpYXQiOjE3MjA1NjQ5OTJ9._e944mGBzPr3v35kAve5gYNrBk4Q-60NDK3yLSAK_gU'  # Replace with your actual access token
 refresh_token = 'c9de870211346f25478054efafbc7837333fb8ce42cb3af7b9e1f7282a5f1922'  # Replace with your actual refresh token
-
-# Provided activity log ID
-log_id = '64505530041'  # Replace with the actual activity log ID
-
-# Paths to save the JSON and CSV files
-output_json_path = r'K:\USYD_PhD_OneDrive\OneDrive - The University of Sydney (Students)\PhD_USYD\ResearchDesign01_Physio Prototype\ECG Measurement\Test_Fitbit\Fitbit_Api\HeartBeat_Test_TCX_0710meeting.json'  # Replace with your actual JSON output path
-output_csv_path = r'K:\USYD_PhD_OneDrive\OneDrive - The University of Sydney (Students)\PhD_USYD\ResearchDesign01_Physio Prototype\ECG Measurement\Test_Fitbit\Fitbit_Api\HeartBeat_Test_TCX_0710meeting.csv'  # Replace with your actual CSV output path
 
 # Set token expiry duration (e.g., 1 hour) and record the last refresh time
 token_expiry_duration = timedelta(hours=1)
@@ -52,41 +44,25 @@ def refresh_access_token():
         print(f"Failed to refresh token: {response.status_code}")
         print(response.text)
 
-# Function to fetch the most recent heart rate data
-def fetch_heart_rate_data():
+# Function to fetch the activity log list
+def fetch_activity_log_list(date):
     global access_token
     headers = {
         'Authorization': f'Bearer {access_token}'
     }
-    url = f'https://api.fitbit.com/1/user/-/activities/{log_id}.tcx'
+    url = f'https://api.fitbit.com/1/user/-/activities/list.json?beforeDate={date}&sort=desc&limit=10&offset=0'
     response = requests.get(url, headers=headers)
     
     if response.status_code == 200:
-        return response.content
+        return response.json()
     elif response.status_code == 401:
         print("Access token expired, refreshing token.")
         refresh_access_token()
-        return fetch_heart_rate_data()
+        return fetch_activity_log_list(date)
     else:
-        print(f"Failed to fetch heart rate data: {response.status_code}")
+        print(f"Failed to fetch activity log list: {response.status_code}")
         print(response.text)
         return None
-
-# Function to parse TCX data
-def parse_tcx_data(tcx_data):
-    root = ET.fromstring(tcx_data)
-    namespace = {"tcx": "http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2"}
-    
-    heart_rate_data = []
-
-    for trackpoint in root.findall(".//tcx:Trackpoint", namespace):
-        time = trackpoint.find("tcx:Time", namespace).text
-        heart_rate_element = trackpoint.find(".//tcx:HeartRateBpm/tcx:Value", namespace)
-        if heart_rate_element is not None:
-            heart_rate = heart_rate_element.text
-            heart_rate_data.append({"time": time, "heart_rate": heart_rate})
-
-    return heart_rate_data
 
 # Function to save data to JSON
 def save_to_json(data, file_path):
@@ -100,10 +76,17 @@ def save_to_csv(data, file_path):
     print(f"Attempting to save CSV to: {file_path}")
     with open(file_path, 'w', newline='') as csv_file:
         csv_writer = csv.writer(csv_file)
-        csv_writer.writerow(['Time', 'Heart Rate'])
-        for record in data:
-            csv_writer.writerow([record['time'], record['heart_rate']])
+        csv_writer.writerow(['logId', 'Time', 'Name', 'Duration', 'Heart_Rate_Zones'])
+        for record in data['activities']:
+            csv_writer.writerow([record['logId'], record['startTime'], record['activityName'], record['duration'], record['heartRateZones']])
     print(f"CSV file created at {file_path}")
+
+# Provided date for fetching activity log list
+date = '2024-07-05'  # Replace with the actual date
+
+# Paths to save the JSON and CSV files
+output_json_path = r'K:\USYD_PhD_OneDrive\OneDrive - The University of Sydney (Students)\PhD_USYD\ResearchDesign01_Physio Prototype\ECG Measurement\Test_Fitbit\Fitbit_Api\Activity_Log_List_0704.json'  # Replace with your actual JSON output path
+output_csv_path = r'K:\USYD_PhD_OneDrive\OneDrive - The University of Sydney (Students)\PhD_USYD\ResearchDesign01_Physio Prototype\ECG Measurement\Test_Fitbit\Fitbit_Api\Activity_Log_List_0704.csv'  # Replace with your actual CSV output path
 
 # Ensure directories exist
 for path in [output_json_path, output_csv_path]:
@@ -117,18 +100,11 @@ print(f"Current system time: {datetime.now().strftime('%H:%M:%S')}")
 if datetime.now() - last_refresh_time > token_expiry_duration - timedelta(minutes=5):
     refresh_access_token()
 
-# Fetch the TCX data using the provided log ID
-tcx_data = fetch_heart_rate_data()
-if tcx_data:
-    # Parse the TCX data to extract heart rate values
-    heart_rate_data = parse_tcx_data(tcx_data)
-    
-    print(f"JSON path: {output_json_path}")
-    print(f"CSV path: {output_csv_path}")
-
-    # Save the heart rate data to JSON and CSV files
-    save_to_json(heart_rate_data, output_json_path)
-    save_to_csv(heart_rate_data, output_csv_path)
+# Fetch the activity log list using the provided date
+activity_log_list = fetch_activity_log_list(date)
+if activity_log_list:
+    # Save the activity log list to JSON and CSV files
+    save_to_json(activity_log_list, output_json_path)
+    save_to_csv(activity_log_list, output_csv_path)
 else:
-    print("No TCX data found.")
-
+    print("No activity log data found.")

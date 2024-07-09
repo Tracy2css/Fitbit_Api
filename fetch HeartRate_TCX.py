@@ -11,17 +11,17 @@ client_id = '23PDS3'
 client_secret = '8be183a112c011a53c188db507728577'  # Replace with your actual client secret
 
 # Replace with the access token you obtained
-access_token = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyM1BEUzMiLCJzdWIiOiJDNE5XUkIiLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJ3aHIgd251dCB3cHJvIHdzbGUgd3NvYyB3YWN0IHdveHkgd3RlbSB3d2VpIHdzZXQgd2xvYyB3cmVzIiwiZXhwIjoxNzIwMDc3ODgwLCJpYXQiOjE3MjAwNDkwODB9.WDpc53AMTQL0UUD8eRU8tFWpTOmZdU02kRQSlLxuNmw'  # Replace with your actual access token
+access_token = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyM1BEUzMiLCJzdWIiOiJDNE5XUkIiLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJ3aHIgd3BybyB3bnV0IHdzbGUgd3NvYyB3YWN0IHdveHkgd3RlbSB3d2VpIHdzZXQgd2xvYyB3cmVzIiwiZXhwIjoxNzIwNTYzNDk2LCJpYXQiOjE3MjA1MzQ2OTZ9.0RfS1r3JCHy0Ppk3tr03fkBHwfyBFzgzzn17RtVLabg'  # Replace with your actual access token
 
 # Replace with the refresh token you obtained
-refresh_token = '2e679cc4e56f7b61a13327c30cb83abd4897098c06655beee5d0d0c97c74c720'  # Replace with your actual refresh token
+refresh_token = '0d078a683b05845c64318e75114ab3e3336f7b24f159b92cce765f3e2ee2bc42'  # Replace with your actual refresh token
 
 # Provided activity log ID
 log_id = '64510125912'  # Replace with the actual activity log ID
 
 # Paths to save the JSON and CSV files
-output_json_path = r'K:\USYD_PhD_OneDrive\OneDrive - The University of Sydney (Students)\PhD_USYD\ResearchDesign01_Physio Prototype\ECG Measurement\Test_Fitbit\Fitbit_Api\HeartBeat_Test_TCX.json'  # Replace with your actual JSON output path
-output_csv_path = r'K:\USYD_PhD_OneDrive\OneDrive - The University of Sydney (Students)\PhD_USYD\ResearchDesign01_Physio Prototype\ECG Measurement\Test_Fitbit\Fitbit_Api\HeartBeat_Test_TCX.csv'  # Replace with your actual CSV output path
+output_json_path = r'K:\USYD_PhD_OneDrive\OneDrive - The University of Sydney (Students)\PhD_USYD\ResearchDesign01_Physio Prototype\ECG Measurement\Test_Fitbit\Fitbit_Api\HeartBeat_Test_TCX_0709.json'  # Replace with your actual JSON output path
+output_csv_path = r'K:\USYD_PhD_OneDrive\OneDrive - The University of Sydney (Students)\PhD_USYD\ResearchDesign01_Physio Prototype\ECG Measurement\Test_Fitbit\Fitbit_Api\HeartBeat_Test_TCX_0709.csv'  # Replace with your actual CSV output path
 
 def refresh_access_token():
     global access_token, refresh_token

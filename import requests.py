@@ -6,7 +6,7 @@ client_id = '23PDS3'
 client_secret = '8be183a112c011a53c188db507728577'  # Replace with your actual client secret
 
 # Authorization code received from Fitbit
-authorization_code = '6827d53372b21b9a4e5fa0920e36d048cbc3b329'
+authorization_code = 'bf1801d6a095e32388a7d137e0f963e70727d512'
 
 # Base64 encode the client ID and client secret
 credentials = base64.b64encode(f"{client_id}:{client_secret}".encode()).decode()
@@ -23,7 +23,7 @@ data = {
     'grant_type': 'authorization_code',
     'redirect_uri': 'http://127.0.0.1:8080/',  # Replace with your actual redirect URI
     'code': authorization_code,
-    'code_verifier': '4l5j0b5e15361h120u5g400y020u532o3p621q2l6a191i2l162r160s6y0y2i324g0x4l2o62602s0d4u0b1s6n713c4s1b166e0l3t5y4h4m0i3i6l6x1j6x1s176z'  # Replace with your actual code verifier
+    'code_verifier': '2s1x3y6m474i1x2v6j5u4f0i1e295m300e502v4a335s0m301r6s3c15494b580r5u2j6o6o4d141l0s1e37083i5s2j306x3r304w5h5i593e6g2n1s3x5y35702a0f'  # Replace with your actual code verifier
 }
 
 # Send POST request to Fitbit token endpoint
